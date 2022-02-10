@@ -8,8 +8,8 @@ osu!lazer Style Custom Cursor for Web
 引入 CSS 和 JS 文件
 
 ```html
-<link rel='stylesheet' href='http://localhost/osu-cursor/dist/index.css' type='text/css'/>
-<script src="http://localhost/osu-cursor/dist/index.js"></script>
+<link rel='stylesheet' href='/dist/index.css' type='text/css'/>
+<script src="/dist/index.js"></script>
 ```
 
 ## 初始化
