@@ -60,3 +60,6 @@ body {
 #head a:active{
 	transform: scale(1);
 }
+*::selection{
+	background: #ff66ab33;
+}

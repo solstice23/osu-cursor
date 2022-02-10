@@ -12,12 +12,11 @@ osu!lazer 样式的前端自定义光标
 
 ### 引入
 
-引入 CSS 和 JS 文件
-
 ```html
-<link rel='stylesheet' href='/dist/index.css' type='text/css'/>
-<script src="/dist/index.js"></script>
+<script src="/dist/main.js"></script>
 ```
+
+所有资源文件已打包于 JS 中，只需要引入 JS。
 
 ### 初始化
 
@@ -35,12 +34,12 @@ var cursor = new osuCursor();
 
 ### `osuCursor.stop()`
 
-停止显示自定义光标
+停止显示自定义光标。
 
 ### `osuCursor.init()`
 
-初始化（重新显示）自定义光标
+初始化（重新显示）自定义光标。
 
 ## 版权
 
-光标图片来自 [ppy/osu-resources](https://github.com/ppy/osu-resources)
+光标图片来自 [ppy/osu-resources](https://github.com/ppy/osu-resources)。

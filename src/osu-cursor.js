@@ -1,5 +1,6 @@
-import cursorDefault from '../assets/cursor.png';
-import cursorAdditive from '../assets/cursor-additive.png';
+import cursorDefault from 'data-url:../assets/cursor.png';
+import cursorAdditive from 'data-url:../assets/cursor-additive.png';
+import styleSheet from 'bundle-text:./style.css';
 import anime from 'animejs';
 
 export default class osuCursor {
@@ -10,7 +11,6 @@ export default class osuCursor {
 		this.init();
     }
 
-
 	injectHtml(html, el) {
 		let div = document.createElement('div');
 		div.innerHTML = html;
@@ -19,7 +19,6 @@ export default class osuCursor {
 		}
 		return el.lastChild;
 	}
-
 
 	init() {
 		this.dragState = 0;
@@ -34,6 +33,11 @@ export default class osuCursor {
 			degrees: 0
 		}
 		this.isTouch = false;
+
+
+		const style = document.createElement('style');
+		style.textContent = styleSheet;
+		document.body.appendChild(style);
 
 		if (document.querySelector("#osu-cursor")){
 			return;
