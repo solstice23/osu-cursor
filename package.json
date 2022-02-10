@@ -1,0 +1,19 @@
+{
+  "name": "osu-cursor",
+  "version": "1.0.0",
+  "description": "osu!lazer Style Custom Cursor for Web",
+  "scripts": {
+    "watch": "parcel watch",
+    "build": "parcel build"
+  },
+  "author": "solstice23",
+  "license": "MIT",
+  "source": "src/index.js",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "devDependencies": {
+    "parcel": "^2.3.0"
+  },
+  "dependencies": {
+    "animejs": "^3.2.1"
+  }
+}
