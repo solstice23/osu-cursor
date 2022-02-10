@@ -1,5 +1,12 @@
 # osu-cursor
-osu!lazer Style Custom Cursor for Web
+
+osu!lazer 样式的前端自定义光标
+
+## Demo
+
+[Demo](https://solstice23.github.io/osu-cursor/demo/)
+
+![screenrecord](demo/preview.gif)
 
 ## 开始
 
