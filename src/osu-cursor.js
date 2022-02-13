@@ -22,10 +22,12 @@ export default class osuCursor {
 
 	init() {
 		this.dragState = 0;
-		/*0 - not dragging
+		/*
+	     -1 - native browser dragging
+		  0 - not dragging (default)
 		  1 - start dragging
 		  2 - dragging and rotating
-		  3 - native browser dragging*/
+		  3 - pointer*/
 		this.visible = false;
 		this.dragStartPos = {x: 0, y: 0};
 		this.rotateState = {
@@ -78,6 +80,9 @@ export default class osuCursor {
 	}
 		
 	getCurrentCursorStyle(target){
+		if (target.hasAttribute("orig-cursor")){
+			return target.getAttribute("orig-cursor");
+		}
 		let cursorStyle = getComputedStyle(target).cursor;
 		return cursorStyle;
 	}
@@ -89,7 +94,7 @@ export default class osuCursor {
 		}
 		this.cursor.style.top = e.pageY - window.pageYOffset + "px";
 		this.cursor.style.left = e.pageX - window.pageXOffset + "px";
-		if (this.dragState != 0 && this.dragState != 3 && this.options.rotate){
+		if ((this.dragState == 1 || this.dragState == 2) && this.options.rotate){
 			const deltaX = e.pageX - window.pageXOffset - this.dragStartPos.x;
 			const deltaY = e.pageY - window.pageYOffset - this.dragStartPos.y;
 			
@@ -108,7 +113,6 @@ export default class osuCursor {
 			anime.remove(this.cursor);
 			this.cursor.style.transition = `transform 0.15s`;
 			this.cursor.style.transform = `rotate(${this.rotateState.degrees}deg)`;
-			
 		}		
     }
 
@@ -118,9 +122,8 @@ export default class osuCursor {
 			return;
 		}
 		if (this.visible){
-			this.dragState = 1;
 			//anime.remove(this.cursor);
-			this.cursorAdditive.style.transitionDuration = "800ms";
+			//this.cursorAdditive.style.transitionDuration = "800ms";
 			this.dragStartPos.x = e.pageX - window.pageXOffset;
 			this.dragStartPos.y = e.pageY - window.pageYOffset;
 			this.rotateState.degrees = 0;
@@ -132,6 +135,14 @@ export default class osuCursor {
 				duration: 800,
 				easing: function() { return function(t) { return (t - 1) * (t - 1) * (t - 1) + 1;} }
 			});
+			anime.remove(this.cursorAdditive);
+			anime({
+				targets: this.cursorAdditive,
+				opacity: this.dragState == 3 ? 1 : [0, 1],
+				duration: 800,
+				easing: function() { return function(t) { return (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1) + 1;} }
+			});
+			this.dragState = 1;
 		}
 	}
 
@@ -147,14 +158,14 @@ export default class osuCursor {
 					duration: 600 * (1 + Math.abs(this.rotateState.degrees / 720)),
 					easing: function() { return function(t) { return Math.pow(2, -10 * t) * Math.sin((0.5 * t - 0.075) * 20.943951023931955) + 1 - 0.0004882812499999998 * t; } },
 					complete: () => {
-						this.rotateState.isInAnimation = false;
+						this.rotateState.isInAnimation = false;new Event('click');
 					}
 				});
 				this.rotateState.degrees = 0;
 				//this.cursor.style.transform = `rotate(0deg)`;
 			}
 			this.dragState = 0;
-			this.cursorAdditive.style.transitionDuration = "600ms";
+			//this.cursorAdditive.style.transitionDuration = "600ms";
 			this.cursor.classList.remove("active");
 			anime.remove(this.cursorInner);
 			anime({
@@ -162,6 +173,13 @@ export default class osuCursor {
 				scale: 1,
 				duration: 500,
 				easing: function() { return function(t) { return Math.pow(2, -10 * t) * Math.sin((t - 0.075) * 20.943951023931955) + 1 - 0.00048828125 * t;} }
+			});
+			anime.remove(this.cursorAdditive);
+			anime({
+				targets: this.cursorAdditive,
+				opacity: [1, 0],
+				duration: 500,
+				easing: function() { return function(t) { return (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1) + 1;} }
 			});
 		}
 	}
@@ -173,7 +191,7 @@ export default class osuCursor {
 	}
 
 	mouseOver(e) {
-		if (this.dragState != 0){
+		if (this.dragState == 1 || this.dragState == 2){
 			return;
 		}
 		const currentCursor = this.getCurrentCursorStyle(e.target);
@@ -181,7 +199,40 @@ export default class osuCursor {
 		if (["default", "auto", "none"].includes(currentCursor)){
 			this.visible = true;
 			document.documentElement.style.cursor = "none";
+			e.target.style.removeProperty("cursor");
 			this.cursor.style.display = "block";
+			if (this.dragState == 3){
+				this.dragState = 0;
+				anime.remove(this.cursor);
+				this.cursor.style.transition = `transform 0.15s`;
+				this.cursor.style.transform = "rotate(0)";
+				anime.remove(this.cursorAdditive);
+				anime({
+					targets: this.cursorAdditive,
+					opacity: 0,
+					duration: 200,
+					easing: function() { return function(t) { return (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1) + 1;} }
+				});
+			}
+		}else if (currentCursor == "pointer") {
+			this.visible = true;
+			document.documentElement.style.cursor = "none";
+			e.target.setAttribute("orig-cursor", currentCursor);
+			e.target.style.cursor = "none";
+			this.cursor.style.display = "block";
+			if (this.dragState == 0 && !this.rotateState.isInAnimation){
+				this.dragState = 3;
+				anime.remove(this.cursor);
+				this.cursor.style.transition = `transform 0.15s`;
+				this.cursor.style.transform = "rotate(24.3deg)";
+				anime.remove(this.cursorAdditive);
+				anime({
+					targets: this.cursorAdditive,
+					opacity: 1,
+					duration: 200,
+					easing: function() { return function(t) { return (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1) + 1;} }
+				});
+			}
 		}else{
 			this.visible = false;
 			document.documentElement.style.removeProperty("cursor");
@@ -193,15 +244,21 @@ export default class osuCursor {
 		this.visible = false;
 		document.documentElement.style.removeProperty("cursor");
 		this.cursor.style.display = "none";
-		this.dragState = 3;
+		this.dragState = -1;
 	}
 
 	dragEnd(e) {
-		this.visible = true;
 		document.documentElement.style.cursor = "none";
 		this.cursor.style.display = "block";
-		this.dragState = 0;
 		this.cursor.classList.remove("active");
+		anime.remove(this.cursorAdditive);
+		this.cursorAdditive.style.opacity = 0;
+		anime.remove(this.cursor);
+		this.cursor.style.transform = "rotate(0)";
+		anime.remove(this.cursorInner);
+		this.cursorInner.style.transform = "scale(1)";
+		this.visible = true;
+		this.dragState = 0;
 	}
 
 	touch(e) {
