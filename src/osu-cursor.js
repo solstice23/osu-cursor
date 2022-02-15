@@ -1,6 +1,6 @@
-import cursorDefault from 'data-url:../assets/cursor.png';
-import cursorAdditive from 'data-url:../assets/cursor-additive.png';
-import styleSheet from 'bundle-text:./style.css';
+import cursorDefault from '../assets/cursor.png';
+import cursorAdditive from '../assets/cursor-additive.png';
+import styleSheet from './style.css';
 import anime from 'animejs';
 
 export default class osuCursor {
@@ -106,7 +106,7 @@ export default class osuCursor {
 
 			let degrees = Math.atan2(-deltaX, deltaY) * 180 / Math.PI + 24.3;
 			
-			const diff = (degrees - this.rotateState.degrees) % 360;
+			let diff = (degrees - this.rotateState.degrees) % 360;
 			if (diff < -180) diff += 360;
 			if (diff > 180) diff -= 360;
 			this.rotateState.degrees += diff;

@@ -2,7 +2,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="./style.css">
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -11,8 +11,8 @@
 		<title>osu! Cursor</title>
 	</head>
 	<body>
-		<script src="../dist/main.js"></script>
-		<script>var cursor = new osuCursor();</script>
+		<script src="./index.js" type="module"></script>
+		<script type="module">import osuCursor from './index.js';var cursor = new osuCursor();</script>
 		<div id="bg"></div>
 		<div id="head">
 			<div id="title">osu! cursor</div>
