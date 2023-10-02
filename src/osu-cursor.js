@@ -79,9 +79,21 @@ export default class osuCursor {
 		document.addEventListener('dragend', this.dragEndFunc, {passive: true});
 	}
 		
-	getCurrentCursorStyle(target){
-		if (target.hasAttribute("orig-cursor")){
-			return target.getAttribute("orig-cursor");
+	getParentAttribute(element, attributeName) {
+		let value = element.getAttribute(attributeName);
+		if (value)
+			return value;
+		let parent = element.parentElement;
+		if (parent) {
+			return this.getParentAttribute(parent, attributeName);
+		}
+		return null;
+	}
+
+	getCurrentCursorStyle(target) {
+		let origCursor = this.getParentAttribute(target, "orig-cursor");
+		if (origCursor) {
+			return origCursor;
 		}
 		let cursorStyle = getComputedStyle(target).cursor;
 		return cursorStyle;
